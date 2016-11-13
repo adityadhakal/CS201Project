@@ -1,0 +1,60 @@
+public class Test1 extends java.lang.Object
+{
+
+    public static void main(java.lang.String[])
+    {
+        java.lang.String[] args;
+        int a, b;
+
+        args := @parameter0: java.lang.String[];
+        a = 0;
+        b = 95;
+        staticinvoke <Test1: void func1(int)>(a);
+        staticinvoke <Test1: void func1(int)>(b);
+        return;
+    }
+
+    public static void func1(int)
+    {
+        int x, temp$0, temp$1, temp$2;
+
+        x := @parameter0: int;
+        if x == 0 goto label0;
+
+        goto label1;
+
+     label0:
+        nop;
+        temp$0 = 0;
+        x = temp$0;
+
+     label1:
+        nop;
+
+     label2:
+        nop;
+        temp$1 = x % 4;
+        if temp$1 != 0 goto label3;
+
+        goto label4;
+
+     label3:
+        nop;
+        temp$2 = x / 4;
+        x = temp$2;
+        goto label2;
+
+     label4:
+        nop;
+        return;
+    }
+
+    public void <init>()
+    {
+        Test1 this;
+
+        this := @this: Test1;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+}
