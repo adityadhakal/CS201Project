@@ -1,11 +1,9 @@
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
+import java.util.Stack;
 
 import soot.Body;
 import soot.BodyTransformer;
@@ -17,11 +15,8 @@ import soot.SootMethod;
 import soot.Transform;
 import soot.Unit;
 import soot.jimple.toolkits.annotation.logic.Loop;
-import soot.jimple.toolkits.thread.mhp.DfsForBackEdge;
-import soot.jimple.toolkits.thread.mhp.LoopBodyFinder;
-import soot.jimple.toolkits.thread.mhp.stmt.JPegStmt;
+import soot.jimple.toolkits.annotation.logic.LoopFinder;
 import soot.options.Options;
-import soot.tagkit.Tag;
 import soot.toolkits.graph.Block;
 import soot.toolkits.graph.DominatorNode;
 import soot.toolkits.graph.DominatorTree;
@@ -31,15 +26,6 @@ import soot.toolkits.graph.LoopNestTree;
 import soot.toolkits.graph.MHGDominatorsFinder;
 import soot.toolkits.graph.SimpleDominatorsFinder;
 import soot.toolkits.graph.pdg.MHGDominatorTree;
-import soot.util.Chain;
-import soot.jimple.toolkits.annotation.logic.Loop;
-import soot.jimple.toolkits.annotation.logic.LoopFinder;
-import soot.jimple.Stmt;
-
-
-import soot.jimple.toolkits.thread.mhp.stmt.JPegStmt;
-import soot.tagkit.*;
-import soot.util.*;
 
 
 public class Main {
@@ -55,26 +41,21 @@ public class Main {
 		soot.Main.main(args);
 
 	}
-	
-
 
 	private static void staticAnalysis(){
-		configure("/home/aditya/Downloads/CS201Profiling/Analysis"); //Change this path to your Analysis folder path in your project directory
-		SootClass sootClass = Scene.v().loadClassAndSupport("Test3");
+		//Static Analysis code
+		
+		configure("/home/hypothesis/workspace/CS201Profiling/Analysis"); //Change this path to your Analysis folder path in your project directory
+		SootClass sootClass = Scene.v().loadClassAndSupport("Test1");
 	    sootClass.setApplicationClass();
-	    ArrayList<SootMethod> methods = (ArrayList)sootClass.getMethods();
+	    ArrayList<SootMethod> methods = (ArrayList<SootMethod>)sootClass.getMethods();
+	    
+	    
+	    //Pred Succ 
 	    for(SootMethod m : methods){
 	    	System.out.println("Method:" + m);
 	    	Body methodBody = m.retrieveActiveBody();
 	    	ExceptionalBlockGraph blockGraph = new ExceptionalBlockGraph(methodBody);
-	    	MHGDominatorTree dominatorTree = new MHGDominatorTree(new MHGDominatorsFinder(blockGraph));
-	    	
-	    	//Loop Calcuations
-	    	Collection loops = computeLoops(methodBody);
-	    	System.out.println("loops here "+loops);
-	    	
-	    	//Block Calculations
-	    	
 	    	List<Block> blocks = blockGraph.getBlocks();
 	    	for(Block b : blocks){
 	    		System.out.println("Basic Block: " + b.getIndexInMethod());
@@ -94,6 +75,8 @@ public class Main {
 	    		}
 	    		System.out.println("\n");
 	    	}
+	    	
+	    	//Dominator Sets
 	    	System.out.println("Domintaor Sets: ");
 	    	SimpleDominatorsFinder finder = new SimpleDominatorsFinder(blockGraph);
 	    	
@@ -107,43 +90,71 @@ public class Main {
 	    	}
 	    	System.out.println();
 	    	
-	    }
-	    
-	    //Static Analysis code
+	    	//Loops
+	    	System.out.println("\nLoops:");
+	    	
+	    	for(Block b : blocks){
+	    		List<Block> succs = b.getSuccs();
+	    		List<Block> dom = finder.getDominators(b);
+	    		for(Block succ: succs){
+	    			if(succ.getIndexInMethod() <= b.getIndexInMethod())
+	    				printLoop(b,succ);
+	    		}
+	    	}
+	    	
+	    } 
 	}
 	
-	//For finding loops
-	private static Collection<Loop> computeLoops(Body b){
-			LoopFinder loopFinder = new LoopFinder();
-			loopFinder.transform(b);
-			Collection<Loop> loops = loopFinder.loops();
-			return loops;
-			
-	}
 	
-	// Show dominator sets
-	private static void dominatorSet(MHGDominatorTree dom, DominatorNode root){
-		ArrayList<DominatorNode> queue = new ArrayList<DominatorNode>();
-		queue.add(root);
-		while(!queue.isEmpty()){
-			DominatorNode node = queue.get(0);
-			queue.remove(0);
-			for(Object n : node.getChildren()){
-				queue.add((DominatorNode)n);
+	private static void printLoop(Block n, Block d){
+		ArrayList<Block> stack = new ArrayList<>();
+		ArrayList<Integer> loop = new ArrayList<>();
+		loop.add(d.getIndexInMethod());
+		loop.add(n.getIndexInMethod());
+		stack.add(n);
+		while(stack.size() > 0){
+			Block m = stack.get(stack.size() - 1 );
+			stack.remove(stack.size() - 1);
+			for (Block p : m.getPreds()){
+				if(!loop.contains(p.getIndexInMethod())){
+					loop.add(p.getIndexInMethod());
+					stack.add(m);
+				}
 			}
-			
-			System.out.println();
-			printDominatorSet(node);
 		}
+		sort(loop);
+		String loopResult = "[";
+		for (int i:loop){
+			loopResult += " "+i;
+		}
+		loopResult += " ]";
+		System.out.println(loopResult);
 	}
 	
-	private static void printDominatorSet(DominatorNode node){
-		DominatorNode parent = node.getParent();
-		while(parent != null){
-			
+	private static void sort(ArrayList<Integer> list){
+		
+		int size = list.size();
+		int[] array = new int[size] ;
+		
+		for(int i = 0 ; i < size ; i++){
+			array[i] = list.get(i);
 		}
 		
+		for (int i = 1 ; i < size ; i++){
+			int key = array[i];
+			int j = i - 1 ;
+			while (j >= 0 && key < array[j]){
+				array[j+1] = array[j];
+				j--;
+			}
+			array[j+1] = key;
+		}
+		list.clear();
+		for(int i = 0 ; i < size ; i++){
+			list.add(array[i]);
+		}
 	}
+	
 	
 	private static void dynamicAnalysis(){
 		PackManager.v().getPack("jtp").add(new Transform("jtp.myInstrumenter", new BodyTransformer() {
