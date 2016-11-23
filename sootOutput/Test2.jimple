@@ -5,25 +5,45 @@ public class Test2 extends java.lang.Object
     {
         java.lang.String[] args;
         int a;
+        long tmp;
+        java.io.PrintStream tmpRef;
 
         args := @parameter0: java.lang.String[];
         a = 10;
         staticinvoke <Test2: void func1(int)>(a);
+        tmp = <Test1: long gotoCount>;
+        tmp = tmp + 1L;
+        <Test1: long gotoCount> = tmp;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("<Test1: long gotoCount>");
         return;
     }
 
     public static void func1(int)
     {
         int x, y, z, temp$0;
+        long tmp;
+        java.io.PrintStream tmpRef;
 
         x := @parameter0: int;
         y = x;
+        tmp = <Test1: long gotoCount>;
+        tmp = tmp + 1L;
+        <Test1: long gotoCount> = tmp;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("<Test1: long gotoCount>");
         z = 1;
 
      label0:
         nop;
+        tmp = <Test1: long gotoCount>;
+        tmp = tmp + 1L;
+        <Test1: long gotoCount> = tmp;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("<Test1: long gotoCount>");
         if y > 0 goto label1;
 
+        tmp = <Test1: long gotoCount>;
+        tmp = tmp + 1L;
+        <Test1: long gotoCount> = tmp;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("<Test1: long gotoCount>");
         goto label2;
 
      label1:
@@ -31,19 +51,33 @@ public class Test2 extends java.lang.Object
         temp$0 = x - z;
         x = temp$0;
         y = x;
+        tmp = <Test1: long gotoCount>;
+        tmp = tmp + 1L;
+        <Test1: long gotoCount> = tmp;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("<Test1: long gotoCount>");
         goto label0;
 
      label2:
         nop;
+        tmp = <Test1: long gotoCount>;
+        tmp = tmp + 1L;
+        <Test1: long gotoCount> = tmp;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("<Test1: long gotoCount>");
         return;
     }
 
     public void <init>()
     {
         Test2 this;
+        long tmp;
+        java.io.PrintStream tmpRef;
 
         this := @this: Test2;
         specialinvoke this.<java.lang.Object: void <init>()>();
+        tmp = <Test1: long gotoCount>;
+        tmp = tmp + 1L;
+        <Test1: long gotoCount> = tmp;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("<Test1: long gotoCount>");
         return;
     }
 }

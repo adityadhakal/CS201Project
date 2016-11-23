@@ -7,13 +7,24 @@ import java.util.Stack;
 
 import soot.Body;
 import soot.BodyTransformer;
+import soot.Local;
+import soot.LongType;
+import soot.Modifier;
 import soot.PackManager;
 import soot.PatchingChain;
+import soot.RefType;
 import soot.Scene;
 import soot.SootClass;
+import soot.SootField;
 import soot.SootMethod;
 import soot.Transform;
 import soot.Unit;
+import soot.jimple.AssignStmt;
+import soot.jimple.IntConstant;
+import soot.jimple.InvokeStmt;
+import soot.jimple.Jimple;
+import soot.jimple.LongConstant;
+import soot.jimple.StringConstant;
 import soot.jimple.toolkits.annotation.logic.Loop;
 import soot.jimple.toolkits.annotation.logic.LoopFinder;
 import soot.options.Options;
@@ -26,6 +37,7 @@ import soot.toolkits.graph.LoopNestTree;
 import soot.toolkits.graph.MHGDominatorsFinder;
 import soot.toolkits.graph.SimpleDominatorsFinder;
 import soot.toolkits.graph.pdg.MHGDominatorTree;
+import soot.util.Chain;
 
 
 public class Main {
@@ -34,7 +46,7 @@ public class Main {
 		
 		//Static Analysis (Retrieve Flow Graph)
 		staticAnalysis();
-
+		
 		//Dynamic Analysis (Instrumentation) 
 		dynamicAnalysis();
  
@@ -45,7 +57,7 @@ public class Main {
 	private static void staticAnalysis(){
 		//Static Analysis code
 		
-		configure("/home/hypothesis/workspace/CS201Profiling/Analysis"); //Change this path to your Analysis folder path in your project directory
+		configure("/home/aditya/Downloads/CS201Profiling/Analysis"); //Change this path to your Analysis folder path in your project directory
 		SootClass sootClass = Scene.v().loadClassAndSupport("Test1");
 	    sootClass.setApplicationClass();
 	    ArrayList<SootMethod> methods = (ArrayList<SootMethod>)sootClass.getMethods();
@@ -159,10 +171,87 @@ public class Main {
 	private static void dynamicAnalysis(){
 		PackManager.v().getPack("jtp").add(new Transform("jtp.myInstrumenter", new BodyTransformer() {
 
+			boolean addedFieldToMainClassAndLoadedPrintStream = false;
+			private SootClass javaIoPrintStream;
 		@Override
 		protected void internalTransform(Body arg0, String arg1, Map arg2) {
-			//Dynamic Analysis (Instrumentation) code				
-		}			
+			//Dynamic Analysis (Instrumentation) code	
+		//	SootClass sClass = arg0.getMethod().getDeclaringClass();
+	        SootField gotoCounter = null;
+	        SootMethod toCall = null;
+	     //   boolean addedLocals = false;
+	     //   Local tmpRef = null, tmpLong = null;
+	     // Add code at the end of the main method to print out the 
+	        // gotoCounter (this only works in simple cases, because you may have multiple returns or System.exit()'s )
+	        synchronized(this)
+	        {
+	            if (!Scene.v().getMainClass().
+	                    declaresMethod("void main(java.lang.String[])"))
+	                throw new RuntimeException("couldn't find main() in mainClass");
+
+	            if (addedFieldToMainClassAndLoadedPrintStream){
+	                gotoCounter = Scene.v().getMainClass().getFieldByName("gotoCount");
+	                toCall = Scene.v().getMethod
+	                	      ("<java.io.PrintStream: void println(java.lang.String)>");
+	            }
+	            else
+	            {
+	                // Add gotoCounter field
+	                gotoCounter = new SootField("gotoCount", LongType.v(), 
+	                                                Modifier.STATIC);
+	                Scene.v().getMainClass().addField(gotoCounter);
+	                
+	                // Add printing field
+	                toCall = Scene.v().getMethod
+	                	      ("<java.io.PrintStream: void println(java.lang.String)>");
+	                // Just in case, resolve the PrintStream SootClass.
+	                Scene.v().loadClassAndSupport("java.io.PrintStream");
+	                javaIoPrintStream = Scene.v().getSootClass("java.io.PrintStream");
+
+	                addedFieldToMainClassAndLoadedPrintStream = true;
+	            }
+	        }
+	        
+	        
+	        //Putting a new variable tmpLocal
+    		Local tmpLocal = Jimple.v().newLocal("tmp", LongType.v());
+            arg0.getLocals().add(tmpLocal);
+            
+         // Create a local to hold the PrintStream System.out
+    		Local tmpRef = Jimple.v().newLocal("tmpRef", RefType.v("java.io.PrintStream"));
+    		arg0.getLocals().add(tmpRef);
+	        
+	        //Making blocks!!!
+			ExceptionalBlockGraph blockGraph = new ExceptionalBlockGraph(arg0);
+	    	List<Block> blocks = blockGraph.getBlocks();
+	    	System.out.println("Method: "+blockGraph.getBody().getMethod());
+	    	
+	    	//Iterating through blocks
+	    	for(Block b : blocks){
+	    		Unit bTail = b.getTail();// This gives us tail unit.
+	    		//let's check for sanity --> Sanity test passed, statement give tail of blocks
+	    		//System.out.println(bTail+"\n");
+	    		//Now put the counters before the blocks
+	    		AssignStmt toAdd1 = Jimple.v().newAssignStmt(tmpLocal, 
+                        Jimple.v().newStaticFieldRef(gotoCounter.makeRef() ));
+	    		AssignStmt toAdd2 = Jimple.v().newAssignStmt(tmpLocal,Jimple.v().newAddExpr(tmpLocal, LongConstant.v(1L)));
+	    		AssignStmt toAdd3 = Jimple.v().newAssignStmt(Jimple.v().newStaticFieldRef(gotoCounter.makeRef()), 
+                                                        tmpLocal);
+	    		InvokeStmt printstate = Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr(tmpRef, toCall.makeRef(),StringConstant.v(gotoCounter.toString())));
+
+	    		// insert "tmpLocal = gotoCounter;"
+	    		b.insertBefore(toAdd1, bTail);
+           
+	    		// insert "tmpLocal = tmpLocal + 1L;" 
+	    		b.insertBefore(toAdd2, bTail);
+
+	    		// insert "gotoCounter = tmpLocal;" 
+	    		b.insertBefore(toAdd3, bTail);
+           
+	    		//Adding the print statement
+	    		b.insertBefore(printstate, bTail);
+		}	
+		}
 	   }));
 	}
 	

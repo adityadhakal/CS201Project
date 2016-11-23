@@ -5,9 +5,15 @@ public class Test4 extends java.lang.Object
     {
         java.lang.String[] args;
         int x, y, temp$0, temp$1;
+        long tmp;
+        java.io.PrintStream tmpRef;
 
         args := @parameter0: java.lang.String[];
         x = 20;
+        tmp = <Test1: long gotoCount>;
+        tmp = tmp + 1L;
+        <Test1: long gotoCount> = tmp;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("<Test1: long gotoCount>");
         y = 2;
 
      label0:
@@ -16,21 +22,39 @@ public class Test4 extends java.lang.Object
         temp$1 = temp$0 + y;
         x = temp$1;
         nop;
+        tmp = <Test1: long gotoCount>;
+        tmp = tmp + 1L;
+        <Test1: long gotoCount> = tmp;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("<Test1: long gotoCount>");
         if x < 40 goto label0;
 
+        tmp = <Test1: long gotoCount>;
+        tmp = tmp + 1L;
+        <Test1: long gotoCount> = tmp;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("<Test1: long gotoCount>");
         goto label1;
 
      label1:
         nop;
+        tmp = <Test1: long gotoCount>;
+        tmp = tmp + 1L;
+        <Test1: long gotoCount> = tmp;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("<Test1: long gotoCount>");
         return;
     }
 
     public void <init>()
     {
         Test4 this;
+        long tmp;
+        java.io.PrintStream tmpRef;
 
         this := @this: Test4;
         specialinvoke this.<java.lang.Object: void <init>()>();
+        tmp = <Test1: long gotoCount>;
+        tmp = tmp + 1L;
+        <Test1: long gotoCount> = tmp;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("<Test1: long gotoCount>");
         return;
     }
 }
