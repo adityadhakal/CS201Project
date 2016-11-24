@@ -7,6 +7,7 @@ public class Test4 extends java.lang.Object
         int x, y, temp$0, temp$1;
         long tmp;
         java.io.PrintStream tmpRef;
+        java.lang.String tmpStr;
 
         args := @parameter0: java.lang.String[];
         x = 20;
@@ -14,6 +15,7 @@ public class Test4 extends java.lang.Object
         tmp = tmp + 1L;
         <Test1: long gotoCount> = tmp;
         tmpRef = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #0");
         virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
         y = 2;
 
@@ -27,6 +29,7 @@ public class Test4 extends java.lang.Object
         tmp = tmp + 1L;
         <Test1: long gotoCount> = tmp;
         tmpRef = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #1");
         virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
         if x < 40 goto label0;
 
@@ -34,6 +37,7 @@ public class Test4 extends java.lang.Object
         tmp = tmp + 1L;
         <Test1: long gotoCount> = tmp;
         tmpRef = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #2");
         virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
         goto label1;
 
@@ -43,6 +47,7 @@ public class Test4 extends java.lang.Object
         tmp = tmp + 1L;
         <Test1: long gotoCount> = tmp;
         tmpRef = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #3");
         virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
         return;
     }
@@ -52,6 +57,7 @@ public class Test4 extends java.lang.Object
         Test4 this;
         long tmp;
         java.io.PrintStream tmpRef;
+        java.lang.String tmpStr;
 
         this := @this: Test4;
         specialinvoke this.<java.lang.Object: void <init>()>();
@@ -59,6 +65,7 @@ public class Test4 extends java.lang.Object
         tmp = tmp + 1L;
         <Test1: long gotoCount> = tmp;
         tmpRef = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #0");
         virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
         return;
     }

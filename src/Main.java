@@ -179,6 +179,7 @@ public class Main {
 		//	SootClass sClass = arg0.getMethod().getDeclaringClass();
 	        SootField gotoCounter = null;
 	        SootMethod toCall = null;
+	        SootMethod toString = null;
 	     //   boolean addedLocals = false;
 	     //   Local tmpRef = null, tmpLong = null;
 	     // Add code at the end of the main method to print out the 
@@ -221,6 +222,10 @@ public class Main {
          // Create a local to hold the PrintStream System.out
     		Local tmpRef = Jimple.v().newLocal("tmpRef", RefType.v("java.io.PrintStream"));
     		arg0.getLocals().add(tmpRef);
+    		
+    		//Create another local to hold String.valueOf
+    		Local tmpStr = Jimple.v().newLocal("tmpStr", RefType.v("java.lang.String"));
+    		arg0.getLocals().add(tmpStr);
 	        
 	        //Making blocks!!!
 			ExceptionalBlockGraph blockGraph = new ExceptionalBlockGraph(arg0);
@@ -244,10 +249,14 @@ public class Main {
 	    				("<java.lang.System: java.io.PrintStream out>").makeRef()));
 
 	    		//This actually prints "tmpLocal" --- We need to print gotoCounter...
-	    		toCall = Scene.v().getMethod("<java.io.PrintStream: void println(long)>");
-	    		InvokeStmt print_long = Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
-	    				(tmpRef, toCall.makeRef(),tmpLocal));
+	    		toCall = Scene.v().getMethod("<java.io.PrintStream: void println(java.lang.String)>");	
+	    		toString = Scene.v().getMethod("<java.io.PrintStream: void println(long)>");
 	    		
+	    		InvokeStmt print_long = Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
+	    				(tmpRef, toString.makeRef(),tmpLocal));
+	    	
+	    		InvokeStmt print_method_name = Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
+	    				(tmpRef, toCall.makeRef(),StringConstant.v(b.toShortString())));
 	    		// insert "tmpLocal = gotoCounter;"
 	    		b.insertBefore(toAdd1, bTail);
            
@@ -260,6 +269,7 @@ public class Main {
 	    		//Adding print object
 	    		b.insertBefore(whatever, bTail);
            
+	    		b.insertBefore(print_method_name,bTail);
 	    		//Adding the print statement
 	    		b.insertBefore(print_long, bTail);
 		}	
