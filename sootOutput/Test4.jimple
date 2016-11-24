@@ -13,7 +13,8 @@ public class Test4 extends java.lang.Object
         tmp = <Test1: long gotoCount>;
         tmp = tmp + 1L;
         <Test1: long gotoCount> = tmp;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("<Test1: long gotoCount>");
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
         y = 2;
 
      label0:
@@ -25,13 +26,15 @@ public class Test4 extends java.lang.Object
         tmp = <Test1: long gotoCount>;
         tmp = tmp + 1L;
         <Test1: long gotoCount> = tmp;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("<Test1: long gotoCount>");
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
         if x < 40 goto label0;
 
         tmp = <Test1: long gotoCount>;
         tmp = tmp + 1L;
         <Test1: long gotoCount> = tmp;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("<Test1: long gotoCount>");
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
         goto label1;
 
      label1:
@@ -39,7 +42,8 @@ public class Test4 extends java.lang.Object
         tmp = <Test1: long gotoCount>;
         tmp = tmp + 1L;
         <Test1: long gotoCount> = tmp;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("<Test1: long gotoCount>");
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
         return;
     }
 
@@ -54,7 +58,8 @@ public class Test4 extends java.lang.Object
         tmp = <Test1: long gotoCount>;
         tmp = tmp + 1L;
         <Test1: long gotoCount> = tmp;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("<Test1: long gotoCount>");
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
         return;
     }
 }

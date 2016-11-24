@@ -202,13 +202,14 @@ public class Main {
 	                Scene.v().getMainClass().addField(gotoCounter);
 	                
 	                // Add printing field
-	                toCall = Scene.v().getMethod
-	                	      ("<java.io.PrintStream: void println(java.lang.String)>");
+	               // toCall = "<java.io.PrintStream: void println(java.lang.String)>";
+	                //Scene.v().getMainClass().addMethod(toCall);
 	                // Just in case, resolve the PrintStream SootClass.
 	                Scene.v().loadClassAndSupport("java.io.PrintStream");
+	                Scene.v().loadClassAndSupport("java.lang.System");
 	                javaIoPrintStream = Scene.v().getSootClass("java.io.PrintStream");
 
-	                addedFieldToMainClassAndLoadedPrintStream = true;
+	               addedFieldToMainClassAndLoadedPrintStream = true;
 	            }
 	        }
 	        
@@ -237,8 +238,16 @@ public class Main {
 	    		AssignStmt toAdd2 = Jimple.v().newAssignStmt(tmpLocal,Jimple.v().newAddExpr(tmpLocal, LongConstant.v(1L)));
 	    		AssignStmt toAdd3 = Jimple.v().newAssignStmt(Jimple.v().newStaticFieldRef(gotoCounter.makeRef()), 
                                                         tmpLocal);
-	    		InvokeStmt printstate = Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr(tmpRef, toCall.makeRef(),StringConstant.v(gotoCounter.toString())));
+	    		
+	    		//This assigns the print object
+	    		AssignStmt whatever = Jimple.v().newAssignStmt(tmpRef,Jimple.v().newStaticFieldRef(Scene.v().getField
+	    				("<java.lang.System: java.io.PrintStream out>").makeRef()));
 
+	    		//This actually prints "tmpLocal" --- We need to print gotoCounter...
+	    		toCall = Scene.v().getMethod("<java.io.PrintStream: void println(long)>");
+	    		InvokeStmt print_long = Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
+	    				(tmpRef, toCall.makeRef(),tmpLocal));
+	    		
 	    		// insert "tmpLocal = gotoCounter;"
 	    		b.insertBefore(toAdd1, bTail);
            
@@ -247,9 +256,12 @@ public class Main {
 
 	    		// insert "gotoCounter = tmpLocal;" 
 	    		b.insertBefore(toAdd3, bTail);
+	    		
+	    		//Adding print object
+	    		b.insertBefore(whatever, bTail);
            
 	    		//Adding the print statement
-	    		b.insertBefore(printstate, bTail);
+	    		b.insertBefore(print_long, bTail);
 		}	
 		}
 	   }));
