@@ -1,0 +1,127 @@
+public class Test1 extends java.lang.Object
+{
+    static long _1_0;
+    static long _2_0;
+    static long _2_1;
+    static long _2_2;
+    static long _2_3;
+    static long _2_4;
+    static long _2_5;
+    static long _2_6;
+    static long _2_7;
+    static long _3_0;
+
+    public static void main(java.lang.String[])
+    {
+        java.lang.String[] args;
+        int a, b;
+        java.io.PrintStream tmpRef, tmpRef, tmpRef;
+        long tmpPrintLong, tmp, tmpPrintLong, tmpPrintLong;
+        java.lang.String tmpStr;
+
+        args := @parameter0: java.lang.String[];
+        a = 0;
+        b = 95;
+        staticinvoke <Test1: void func1(int)>(a);
+        staticinvoke <Test1: void func1(int)>(b);
+        tmpPrintLong = <Test1: long _1_0>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong);
+        tmp = <Test1: long _1_0>;
+        tmp = tmp + 1L;
+        <Test1: long _1_0> = tmp;
+        tmpPrintLong = <Test1: long _2_0>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong);
+        tmpPrintLong = <Test1: long _2_1>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong);
+        tmpPrintLong = <Test1: long _2_2>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong);
+        tmpPrintLong = <Test1: long _2_3>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong);
+        tmpPrintLong = <Test1: long _2_4>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong);
+        tmpPrintLong = <Test1: long _2_5>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong);
+        tmpPrintLong = <Test1: long _2_6>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong);
+        tmpPrintLong = <Test1: long _2_7>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong);
+        tmpPrintLong = <Test1: long _3_0>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong);
+        return;
+    }
+
+    public static void func1(int)
+    {
+        int x, temp$0, temp$1, temp$2;
+        long tmp;
+        java.lang.String tmpStr;
+
+        x := @parameter0: int;
+        tmp = <Test1: long _2_0>;
+        tmp = tmp + 1L;
+        <Test1: long _2_0> = tmp;
+        if x == 0 goto label0;
+
+        tmp = <Test1: long _2_1>;
+        tmp = tmp + 1L;
+        <Test1: long _2_1> = tmp;
+        goto label1;
+
+     label0:
+        nop;
+        temp$0 = 0;
+        tmp = <Test1: long _2_2>;
+        tmp = tmp + 1L;
+        <Test1: long _2_2> = tmp;
+        x = temp$0;
+
+     label1:
+        tmp = <Test1: long _2_3>;
+        tmp = tmp + 1L;
+        <Test1: long _2_3> = tmp;
+        nop;
+
+     label2:
+        nop;
+        temp$1 = x % 4;
+        tmp = <Test1: long _2_4>;
+        tmp = tmp + 1L;
+        <Test1: long _2_4> = tmp;
+        if temp$1 != 0 goto label3;
+
+        tmp = <Test1: long _2_5>;
+        tmp = tmp + 1L;
+        <Test1: long _2_5> = tmp;
+        goto label4;
+
+     label3:
+        nop;
+        temp$2 = x / 4;
+        x = temp$2;
+        tmp = <Test1: long _2_6>;
+        tmp = tmp + 1L;
+        <Test1: long _2_6> = tmp;
+        goto label2;
+
+     label4:
+        nop;
+        tmp = <Test1: long _2_7>;
+        tmp = tmp + 1L;
+        <Test1: long _2_7> = tmp;
+        return;
+    }
+
+    public void <init>()
+    {
+        Test1 this;
+        long tmp;
+        java.lang.String tmpStr;
+
+        this := @this: Test1;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        tmp = <Test1: long _3_0>;
+        tmp = tmp + 1L;
+        <Test1: long _3_0> = tmp;
+        return;
+    }
+}

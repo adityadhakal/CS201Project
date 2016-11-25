@@ -27,6 +27,7 @@ import soot.jimple.InvokeStmt;
 import soot.jimple.Jimple;
 import soot.jimple.LongConstant;
 import soot.jimple.ReturnStmt;
+import soot.jimple.ReturnVoidStmt;
 import soot.jimple.Stmt;
 import soot.jimple.StringConstant;
 import soot.jimple.toolkits.annotation.logic.Loop;
@@ -184,17 +185,18 @@ public class Main {
 			//Dynamic Analysis (Instrumentation) code
 			Local tmpRef = Jimple.v().newLocal("tmpRef", RefType.v("java.io.PrintStream"));
 			Local tmpPrintLong = Jimple.v().newLocal("tmpPrintLong", LongType.v());
-			arg0.getLocals().add(tmpRef);
-    		arg0.getLocals().add(tmpPrintLong);
+			Scene.v().getMainMethod().getActiveBody().getLocals().add(tmpRef);
+    		Scene.v().getMainMethod().getActiveBody().getLocals().add(tmpPrintLong);
 	      //Making blocks!!!
 			if(arg0.getMethod().getName().equals("main")){
-				Iterator stmtIt = arg0.getUnits().snapshotIterator();
+				Iterator<Unit> stmtIt = arg0.getUnits().iterator();
+				System.out.println("Does it execute here?");
 				while (stmtIt.hasNext())
 				 	{
 					Stmt s = (Stmt) stmtIt.next();
-					if(s instanceof ReturnStmt){
+					if(s instanceof ReturnStmt || s instanceof ReturnVoidStmt){
 						returnUnit = s;
-					System.out.println(returnUnit);
+					System.out.println("Print Return Unit: "+returnUnit);
 					}
 					}
 				
@@ -230,9 +232,9 @@ public class Main {
 	                gotoCounter[i] = new SootField("_"+String.valueOf(blockGraph.getBody().getMethod().getNumber())+"_"+String.valueOf(i), LongType.v(),Modifier.STATIC);
 	                Scene.v().getMainClass().addField(gotoCounter[i]);
 	                
-	                arg0.getUnits().insertBefore(Jimple.v().newAssignStmt(tmpPrintLong, Jimple.v().newStaticFieldRef(gotoCounter[i].makeRef())),returnUnit);
+	                Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt(tmpPrintLong, Jimple.v().newStaticFieldRef(gotoCounter[i].makeRef())),returnUnit);
 	              //Now loop through all the variables so we can print them
-		    		arg0.getUnits().insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
+		    		Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
 		    				(tmpRef, tolong.makeRef(),tmpPrintLong)),returnUnit);
 	                }
 	                Scene.v().loadClassAndSupport("java.io.PrintStream");
