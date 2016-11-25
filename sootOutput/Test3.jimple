@@ -4,7 +4,7 @@ public class Test3 extends java.lang.Object
     public static void main(java.lang.String[])
     {
         java.lang.String[] args;
-        long tmp, tmpPrintLong;
+        long tmp, tmpPrintLong0;
         java.io.PrintStream tmpRef;
         java.lang.String tmpStr;
 
@@ -15,16 +15,16 @@ public class Test3 extends java.lang.Object
         tmp = tmp + 1L;
         <Test1: long gotoCount261200> = tmp;
         tmpRef = <java.lang.System: java.io.PrintStream out>;
-        tmpPrintLong = <Test1: long gotoCount261200>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block 0:\n[preds: ] [succs: ]\nargs := @parameter0: java.lang.String[];\nstaticinvoke <Test3: void func1(int)>(100);\nstaticinvoke <Test3: void func2(int)>(10);\ntmp = <Test1: long gotoCount261200>;\ntmp = tmp + 1L;\n<Test1: long gotoCount261200> = tmp;\ntmpRef = <java.lang.System: java.io.PrintStream out>;\nreturn;\n");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong);
         return;
+
+        tmpPrintLong0 = <Test1: long gotoCount261200>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong0);
     }
 
     public static void func1(int)
     {
         int x, m, temp$0;
-        long tmp, tmpPrintLong;
+        long tmp, tmpPrintLong0, tmpPrintLong1, tmpPrintLong2, tmpPrintLong3, tmpPrintLong4, tmpPrintLong5, tmpPrintLong6, tmpPrintLong7;
         java.io.PrintStream tmpRef;
         java.lang.String tmpStr;
 
@@ -33,23 +33,27 @@ public class Test3 extends java.lang.Object
         tmp = <Test1: long gotoCount261210>;
         tmp = tmp + 1L;
         <Test1: long gotoCount261210> = tmp;
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
         if x == 0 goto label0;
 
         tmp = <Test1: long gotoCount261211>;
         tmp = tmp + 1L;
         <Test1: long gotoCount261211> = tmp;
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
         goto label1;
 
      label0:
         tmp = <Test1: long gotoCount261212>;
         tmp = tmp + 1L;
         <Test1: long gotoCount261212> = tmp;
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
         nop;
 
      label1:
         tmp = <Test1: long gotoCount261213>;
         tmp = tmp + 1L;
         <Test1: long gotoCount261213> = tmp;
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
         nop;
 
      label2:
@@ -57,11 +61,13 @@ public class Test3 extends java.lang.Object
         tmp = <Test1: long gotoCount261214>;
         tmp = tmp + 1L;
         <Test1: long gotoCount261214> = tmp;
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
         if x > 0 goto label3;
 
         tmp = <Test1: long gotoCount261215>;
         tmp = tmp + 1L;
         <Test1: long gotoCount261215> = tmp;
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
         goto label4;
 
      label3:
@@ -71,6 +77,7 @@ public class Test3 extends java.lang.Object
         tmp = <Test1: long gotoCount261216>;
         tmp = tmp + 1L;
         <Test1: long gotoCount261216> = tmp;
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
         goto label2;
 
      label4:
@@ -78,13 +85,31 @@ public class Test3 extends java.lang.Object
         tmp = <Test1: long gotoCount261217>;
         tmp = tmp + 1L;
         <Test1: long gotoCount261217> = tmp;
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
         return;
+
+        tmpPrintLong0 = <Test1: long gotoCount261210>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong0);
+        tmpPrintLong1 = <Test1: long gotoCount261211>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong1);
+        tmpPrintLong2 = <Test1: long gotoCount261212>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong2);
+        tmpPrintLong3 = <Test1: long gotoCount261213>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong3);
+        tmpPrintLong4 = <Test1: long gotoCount261214>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong4);
+        tmpPrintLong5 = <Test1: long gotoCount261215>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong5);
+        tmpPrintLong6 = <Test1: long gotoCount261216>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong6);
+        tmpPrintLong7 = <Test1: long gotoCount261217>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong7);
     }
 
     public static void func2(int)
     {
         int a, n, temp$0, temp$1;
-        long tmp, tmpPrintLong;
+        long tmp, tmpPrintLong0, tmpPrintLong1, tmpPrintLong2, tmpPrintLong3, tmpPrintLong4, tmpPrintLong5, tmpPrintLong6, tmpPrintLong7;
         java.io.PrintStream tmpRef;
         java.lang.String tmpStr;
 
@@ -93,23 +118,27 @@ public class Test3 extends java.lang.Object
         tmp = <Test1: long gotoCount261220>;
         tmp = tmp + 1L;
         <Test1: long gotoCount261220> = tmp;
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
         if a == 0 goto label0;
 
         tmp = <Test1: long gotoCount261221>;
         tmp = tmp + 1L;
         <Test1: long gotoCount261221> = tmp;
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
         goto label1;
 
      label0:
         tmp = <Test1: long gotoCount261222>;
         tmp = tmp + 1L;
         <Test1: long gotoCount261222> = tmp;
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
         nop;
 
      label1:
         tmp = <Test1: long gotoCount261223>;
         tmp = tmp + 1L;
         <Test1: long gotoCount261223> = tmp;
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
         nop;
 
      label2:
@@ -117,11 +146,13 @@ public class Test3 extends java.lang.Object
         tmp = <Test1: long gotoCount261224>;
         tmp = tmp + 1L;
         <Test1: long gotoCount261224> = tmp;
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
         if a < 100 goto label3;
 
         tmp = <Test1: long gotoCount261225>;
         tmp = tmp + 1L;
         <Test1: long gotoCount261225> = tmp;
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
         goto label4;
 
      label3:
@@ -132,6 +163,7 @@ public class Test3 extends java.lang.Object
         tmp = <Test1: long gotoCount261226>;
         tmp = tmp + 1L;
         <Test1: long gotoCount261226> = tmp;
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
         goto label2;
 
      label4:
@@ -139,13 +171,31 @@ public class Test3 extends java.lang.Object
         tmp = <Test1: long gotoCount261227>;
         tmp = tmp + 1L;
         <Test1: long gotoCount261227> = tmp;
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
         return;
+
+        tmpPrintLong0 = <Test1: long gotoCount261220>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong0);
+        tmpPrintLong1 = <Test1: long gotoCount261221>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong1);
+        tmpPrintLong2 = <Test1: long gotoCount261222>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong2);
+        tmpPrintLong3 = <Test1: long gotoCount261223>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong3);
+        tmpPrintLong4 = <Test1: long gotoCount261224>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong4);
+        tmpPrintLong5 = <Test1: long gotoCount261225>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong5);
+        tmpPrintLong6 = <Test1: long gotoCount261226>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong6);
+        tmpPrintLong7 = <Test1: long gotoCount261227>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong7);
     }
 
     public void <init>()
     {
         Test3 this;
-        long tmp, tmpPrintLong;
+        long tmp, tmpPrintLong0;
         java.io.PrintStream tmpRef;
         java.lang.String tmpStr;
 
@@ -154,6 +204,10 @@ public class Test3 extends java.lang.Object
         tmp = <Test1: long gotoCount261230>;
         tmp = tmp + 1L;
         <Test1: long gotoCount261230> = tmp;
+        tmpRef = <java.lang.System: java.io.PrintStream out>;
         return;
+
+        tmpPrintLong0 = <Test1: long gotoCount261230>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong0);
     }
 }

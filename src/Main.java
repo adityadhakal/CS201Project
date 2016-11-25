@@ -221,9 +221,7 @@ public class Main {
     		Local tmpStr = Jimple.v().newLocal("tmpStr", RefType.v("java.lang.String"));
     		arg0.getLocals().add(tmpStr);
     		
-    		//Putting a new local variable tmpPrintLong to Print everything at the end
-    		Local tmpPrintLong = Jimple.v().newLocal("tmpPrintLong", LongType.v());
-    		arg0.getLocals().add(tmpPrintLong);
+    		
     		
 	    	//Iterating through blocks
 	    	//for(Block b : blocks)
@@ -249,46 +247,59 @@ public class Main {
 	    		//insert "gotoCounter = tmpLocal;" 
 	    		blocks.get(j).insertBefore(toAdd3, bTail);
 	    		
-	    		System.out.println("."+blockGraph.getBody().getMethod().getName()+".");
+	    		//System.out.println("."+blockGraph.getBody().getMethod().getName()+".");
+	    		
+
+	    		//This assigns the print object
+	    		AssignStmt whatever = Jimple.v().newAssignStmt(tmpRef,Jimple.v().newStaticFieldRef(Scene.v().getField
+	    				("<java.lang.System: java.io.PrintStream out>").makeRef()));
+	    		
+	    		//We need to print everything on Main Statement
 	    		//Now the printing Statement In the end of the method
-		    	if(blockGraph.getBody().getMethod().getName().equals("main"))
-		    	{
-		    		System.out.println("Inside the if");
-		    		//This assigns the print object
-		    		AssignStmt whatever = Jimple.v().newAssignStmt(tmpRef,Jimple.v().newStaticFieldRef(Scene.v().getField
-		    				("<java.lang.System: java.io.PrintStream out>").makeRef()));
+	    		//Adding print object
+	    		blocks.get(j).insertBefore(whatever, bTail);
+	    	}
+		    		
 
 		    		//This actually prints "tmpLocal" --- We need to print gotoCounter...
 		    		toCall = Scene.v().getMethod("<java.io.PrintStream: void println(java.lang.String)>");	
 		    		tolong = Scene.v().getMethod("<java.io.PrintStream: void println(long)>");
 		    		
-		    		//Adding print object
-		    		blocks.get(j).insertBefore(whatever, bTail);
+		    		
 		    	
+		    		Chain units = arg0.getUnits();
 		    		
 		    		for(int k = 0; k<blocks.size();k++){
-		    		AssignStmt toAdd4 = Jimple.v().newAssignStmt(tmpPrintLong, 
-		                       Jimple.v().newStaticFieldRef(gotoCounter[k].makeRef() ));
-		    		//Now loop through all the variables so we can print them
-		    		InvokeStmt print_long = Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
-		    				(tmpRef, tolong.makeRef(),tmpPrintLong));
-		    	
-		    		InvokeStmt print_method_name = Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
-		    				(tmpRef, toCall.makeRef(),StringConstant.v(blocks.get(j).toString())));
-		    		
-		    		//Putting the assignment Operation
-		    		blocks.get(j).insertBefore(toAdd4, bTail);
-		    		//Printing the Method name
-		    		blocks.get(j).insertBefore(print_method_name,bTail);
-		    		
-		    		//Adding the print statement
-		    		blocks.get(j).insertBefore(print_long, bTail);
-		    		
+		    			
+		    			// First get the tmpRef added. Let's add a lot of them
+		    			//Putting a new local variable tmpPrintLong to Print everything at the end
+		        		Local tmpPrintLong = Jimple.v().newLocal("tmpPrintLong"+k, LongType.v());
+		        		arg0.getLocals().add(tmpPrintLong);
+		    			
+//		    		units.add(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr(base, method)))	
+		    			
+		    		units.add(Jimple.v().newAssignStmt(tmpPrintLong, 
+		                       Jimple.v().newStaticFieldRef(gotoCounter[k].makeRef() )));
+//		    		//Now loop through all the variables so we can print them
+		    		units.add(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
+		    				(tmpRef, tolong.makeRef(),tmpPrintLong)));
+//		    	
+//		    		InvokeStmt print_method_name = Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
+//		    				(tmpRef, toCall.makeRef(),StringConstant.v(blocks.get(j).toString())));
+//		    		
+//		    		//Putting the assignment Operation
+		    		//blocks.get(j).insertBefore(toAdd4, bTail);
+//		    		//Printing the Method name
+//		    		blocks.get(j).insertBefore(print_method_name,bTail);
+//		    		
+//		    		//Adding the print statement
+		    		//blocks.get(j).insertBefore(print_long, bTail);
+//		    		
 		    		
 		    		}
 		    		
-		    	}
-	    	}
+		    	
+	    	
 		}
 	   }));
 	}
