@@ -183,50 +183,47 @@ public class Main {
 		@Override
 		protected void internalTransform(Body arg0, String arg1, Map arg2) {
 			//Dynamic Analysis (Instrumentation) code
+			
+			//tmpRef is object for printing
 			Local tmpRef = Jimple.v().newLocal("tmpRef", RefType.v("java.io.PrintStream"));
 			Scene.v().getMainMethod().getActiveBody().getLocals().add(tmpRef);
 			
+			//tmpPrintLong is object for holding long value before printing
 			Local tmpPrintLong = Jimple.v().newLocal("tmpPrintLong", LongType.v());
-			
     		Scene.v().getMainMethod().getActiveBody().getLocals().add(tmpPrintLong);
-	      //Making blocks!!!
+    		
+	      //Executing Main
 			if(arg0.getMethod().getName().equals("main")){
 				Iterator<Unit> stmtIt = arg0.getUnits().iterator();
-				System.out.println("Does it execute here?");
 				while (stmtIt.hasNext())
 				 	{
 					Stmt s = (Stmt) stmtIt.next();
 					if(s instanceof ReturnStmt || s instanceof ReturnVoidStmt){
 						returnUnit = s;
-					System.out.println("Print Return Unit: "+returnUnit);
 					}
 					}
 				
-	    		
 			}
-			
 			
 			ExceptionalBlockGraph blockGraph = new ExceptionalBlockGraph(arg0);
 	    	List<Block> blocks = blockGraph.getBlocks();
-	    	System.out.println("Method: "+blockGraph.getBody().getMethod().getName()+" :");
-	    	System.out.println("---V---");
+	    	//System.out.println("Method: "+blockGraph.getBody().getMethod().getName()+" :");
+	    	//System.out.println("---V---");
 	    	
-	    	//System.out.println("Block Size = "+blocks.size());
 	    	//Making fields for counting and printing
 	    	SootField[] gotoCounter = new SootField[blocks.size()];
 		    SootMethod toCall = null;
 		    SootMethod tolong = null;
+		    SootMethod toPrint = null;
 		    
 		    toCall = Scene.v().getMethod("<java.io.PrintStream: void println(java.lang.String)>");	
     		tolong = Scene.v().getMethod("<java.io.PrintStream: void println(long)>");
+    		toPrint= Scene.v().getMethod("<java.io.PrintStream: void print(java.lang.String)>");
 		        
     		  //Putting a new variable tmpLocal
     		Local tmpLocal = Jimple.v().newLocal("tmp", LongType.v());
             arg0.getLocals().add(tmpLocal);
             
-        
-    		
-    		
     		//Create another local to hold String.valueOf
     		Local tmpStr = Jimple.v().newLocal("tmpStr", RefType.v("java.lang.String"));
     		arg0.getLocals().add(tmpStr);
@@ -240,10 +237,24 @@ public class Main {
 	                throw new RuntimeException("couldn't find main() in mainClass");
 
 	                for(int i =0; i<blocks.size(); i++){
+	                	
+	                	//gotoCounter is shootfield for the static variable
 	                gotoCounter[i] = new SootField("_"+String.valueOf(blockGraph.getBody().getMethod().getNumber())+"_"+String.valueOf(i), LongType.v(),Modifier.STATIC);
 	                Scene.v().getMainClass().addField(gotoCounter[i]);
 	                
+	              //This assigns temRef to print
+	                Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt
+	                		(tmpRef, Jimple.v().newStaticFieldRef(Scene.v().getField("<java.lang.System: java.io.PrintStream out>").makeRef())),returnUnit);
+	              //Print the Name of the method on Start of each block
+	                if(i==0)
+	                	Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
+			    				(tmpRef, toCall.makeRef(),StringConstant.v("Method:"+arg0.getMethod().getName()))),returnUnit);
+	                //One time execution for the Main
 	                if(arg0.getMethod().getName().equals("main")&& i == 0){
+	                	
+	                	//Print the method Name first:
+	                	
+	                	
 	                	//tmpLocal = _1_0
 	                	Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt(tmpLocal, 
 	                        Jimple.v().newStaticFieldRef(gotoCounter[0].makeRef())),returnUnit);
@@ -254,14 +265,16 @@ public class Main {
 	                	Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt(Jimple.v().newStaticFieldRef
 	 	    				(gotoCounter[0].makeRef()),tmpLocal),returnUnit);
 	                }
-	                //This assigns tempref to print
-	                Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt
-	                		(tmpRef, Jimple.v().newStaticFieldRef(Scene.v().getField("<java.lang.System: java.io.PrintStream out>").makeRef())),returnUnit);
 	                
 	                //This assigns long variables to static longs
 	                Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt
 	                		(tmpPrintLong, Jimple.v().newStaticFieldRef(gotoCounter[i].makeRef())),returnUnit);
-	              //Now loop through all the variables so we can print them
+	              
+	               //This prints the block number
+	                Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
+		    				(tmpRef, toPrint.makeRef(),StringConstant.v("b"+i+":"))),returnUnit);
+	                
+	                //This part prints the Long Values:
 		    		Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
 		    				(tmpRef, tolong.makeRef(),tmpPrintLong)),returnUnit);
 	                }
@@ -271,8 +284,6 @@ public class Main {
 	                addedFieldToMainClassAndLoadedPrintStream = true;    
 	        }
 	         
-	      
-    		
     		
 	    	//Iterating through blocks
 	    	//for(Block b : blocks)
@@ -296,59 +307,10 @@ public class Main {
 	    		blocks.get(j).insertBefore(toAdd2, bTail);
 
 	    		//insert "gotoCounter = tmpLocal;" 
-	    		blocks.get(j).insertBefore(toAdd3, bTail);
-	    		
-	    		//System.out.println("."+blockGraph.getBody().getMethod().getName()+".");
-	    		
-
-	    		
+	    		blocks.get(j).insertBefore(toAdd3, bTail);	
 	    	}
 		    		
-//	    	//This assigns the print object
-//    		AssignStmt whatever = Jimple.v().newAssignStmt(tmpRef,Jimple.v().newStaticFieldRef(Scene.v().getField
-//    				("<java.lang.System: java.io.PrintStream out>").makeRef()));
-//    		
-//    		//We need to print everything on Main Statement
-//    		//Now the printing Statement In the end of the method
-//    		//Adding print object
-//    		blocks.get(j).insertBefore(whatever, bTail);
-		    		//This actually prints "tmpLocal" --- We need to print gotoCounter...
-		    		
-		    			
-		    	
-		    		//Chain units = arg0.getUnits();
-		    		
-		    		//for(int k = 0; k<blocks.size();k++){
-		    			
-		    			// First get the tmpRef added. Let's add a lot of them
-		    			//Putting a new local variable tmpPrintLong to Print everything at the end
-		        		
-		    			
-//		    		units.add(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr(base, method)))	
-		        		
-		        	//returnUnit.addLast( Jimple.v().newAssignStmt(tmpRef,Jimple.v().newStaticFieldRef((SootFieldRef) Scene.v().getField("<java.lang.System: java.io.PrintStream out>"))));
-//		    		returnUnit.addLast(Jimple.v().newAssignStmt(tmpPrintLong, 
-//		                       Jimple.v().newStaticFieldRef(gotoCounter[k].makeRef() )));
-////		    		//Now loop through all the variables so we can print them
-//		    		returnUnit.addLast(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
-//		    				(tmpRef, tolong.makeRef(),tmpPrintLong)));
-//		    	
-//		    		InvokeStmt print_method_name = Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
-//		    				(tmpRef, toCall.makeRef(),StringConstant.v(blocks.get(j).toString())));
-//		    		
-//		    		//Putting the assignment Operation
-		    		//blocks.get(j).insertBefore(toAdd4, bTail);
-//		    		//Printing the Method name
-//		    		blocks.get(j).insertBefore(print_method_name,bTail);
-//		    		
-//		    		//Adding the print statement
-		    		//blocks.get(j).insertBefore(print_long, bTail);
-//		    		
-		    		
-		    		
-		    		
-		    	
-	    	
+
 		}
 	   }));
 	}
