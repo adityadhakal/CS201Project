@@ -5,55 +5,47 @@ public class Test2 extends java.lang.Object
     {
         java.lang.String[] args;
         int a;
-        long tmp;
+        long tmp, tmpPrintLong;
         java.io.PrintStream tmpRef;
         java.lang.String tmpStr;
 
         args := @parameter0: java.lang.String[];
         a = 10;
         staticinvoke <Test2: void func1(int)>(a);
-        tmp = <Test1: long gotoCount>;
+        tmp = <Test1: long gotoCount261170>;
         tmp = tmp + 1L;
-        <Test1: long gotoCount> = tmp;
+        <Test1: long gotoCount261170> = tmp;
         tmpRef = <java.lang.System: java.io.PrintStream out>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #0");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
+        tmpPrintLong = <Test1: long gotoCount261170>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block 0:\n[preds: ] [succs: ]\nargs := @parameter0: java.lang.String[];\na = 10;\nstaticinvoke <Test2: void func1(int)>(a);\ntmp = <Test1: long gotoCount261170>;\ntmp = tmp + 1L;\n<Test1: long gotoCount261170> = tmp;\ntmpRef = <java.lang.System: java.io.PrintStream out>;\nreturn;\n");
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong);
         return;
     }
 
     public static void func1(int)
     {
         int x, y, z, temp$0;
-        long tmp;
+        long tmp, tmpPrintLong;
         java.io.PrintStream tmpRef;
         java.lang.String tmpStr;
 
         x := @parameter0: int;
         y = x;
-        tmp = <Test1: long gotoCount>;
+        tmp = <Test1: long gotoCount261180>;
         tmp = tmp + 1L;
-        <Test1: long gotoCount> = tmp;
-        tmpRef = <java.lang.System: java.io.PrintStream out>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #0");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
+        <Test1: long gotoCount261180> = tmp;
         z = 1;
 
      label0:
         nop;
-        tmp = <Test1: long gotoCount>;
+        tmp = <Test1: long gotoCount261181>;
         tmp = tmp + 1L;
-        <Test1: long gotoCount> = tmp;
-        tmpRef = <java.lang.System: java.io.PrintStream out>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #1");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
+        <Test1: long gotoCount261181> = tmp;
         if y > 0 goto label1;
 
-        tmp = <Test1: long gotoCount>;
+        tmp = <Test1: long gotoCount261182>;
         tmp = tmp + 1L;
-        <Test1: long gotoCount> = tmp;
-        tmpRef = <java.lang.System: java.io.PrintStream out>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #2");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
+        <Test1: long gotoCount261182> = tmp;
         goto label2;
 
      label1:
@@ -61,40 +53,31 @@ public class Test2 extends java.lang.Object
         temp$0 = x - z;
         x = temp$0;
         y = x;
-        tmp = <Test1: long gotoCount>;
+        tmp = <Test1: long gotoCount261183>;
         tmp = tmp + 1L;
-        <Test1: long gotoCount> = tmp;
-        tmpRef = <java.lang.System: java.io.PrintStream out>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #3");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
+        <Test1: long gotoCount261183> = tmp;
         goto label0;
 
      label2:
         nop;
-        tmp = <Test1: long gotoCount>;
+        tmp = <Test1: long gotoCount261184>;
         tmp = tmp + 1L;
-        <Test1: long gotoCount> = tmp;
-        tmpRef = <java.lang.System: java.io.PrintStream out>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #4");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
+        <Test1: long gotoCount261184> = tmp;
         return;
     }
 
     public void <init>()
     {
         Test2 this;
-        long tmp;
+        long tmp, tmpPrintLong;
         java.io.PrintStream tmpRef;
         java.lang.String tmpStr;
 
         this := @this: Test2;
         specialinvoke this.<java.lang.Object: void <init>()>();
-        tmp = <Test1: long gotoCount>;
+        tmp = <Test1: long gotoCount261190>;
         tmp = tmp + 1L;
-        <Test1: long gotoCount> = tmp;
-        tmpRef = <java.lang.System: java.io.PrintStream out>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #0");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
+        <Test1: long gotoCount261190> = tmp;
         return;
     }
 }

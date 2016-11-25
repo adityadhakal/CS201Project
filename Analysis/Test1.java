@@ -2,8 +2,8 @@ public class Test1 {
 
 	public static void main(String[] args) {		
 		int a = 0;
-		//int b = 95;
-		int b = 92;
+		int b = 95;
+		//int b = 92;
 		func1(a);	
 		func1(b);	
 	}

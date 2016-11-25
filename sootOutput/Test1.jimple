@@ -1,130 +1,143 @@
 public class Test1 extends java.lang.Object
 {
-    static long gotoCount;
+    static long gotoCount10;
+    static long gotoCount20;
+    static long gotoCount21;
+    static long gotoCount22;
+    static long gotoCount23;
+    static long gotoCount24;
+    static long gotoCount25;
+    static long gotoCount26;
+    static long gotoCount27;
+    static long gotoCount30;
+    static long gotoCount261150;
+    static long gotoCount261151;
+    static long gotoCount261152;
+    static long gotoCount261153;
+    static long gotoCount261160;
+    static long gotoCount261170;
+    static long gotoCount261180;
+    static long gotoCount261181;
+    static long gotoCount261182;
+    static long gotoCount261183;
+    static long gotoCount261184;
+    static long gotoCount261190;
+    static long gotoCount261200;
+    static long gotoCount261210;
+    static long gotoCount261211;
+    static long gotoCount261212;
+    static long gotoCount261213;
+    static long gotoCount261214;
+    static long gotoCount261215;
+    static long gotoCount261216;
+    static long gotoCount261217;
+    static long gotoCount261220;
+    static long gotoCount261221;
+    static long gotoCount261222;
+    static long gotoCount261223;
+    static long gotoCount261224;
+    static long gotoCount261225;
+    static long gotoCount261226;
+    static long gotoCount261227;
+    static long gotoCount261230;
 
     public static void main(java.lang.String[])
     {
         java.lang.String[] args;
         int a, b;
-        long tmp;
+        long tmp, tmpPrintLong;
         java.io.PrintStream tmpRef;
         java.lang.String tmpStr;
 
         args := @parameter0: java.lang.String[];
         a = 0;
-        b = 92;
+        b = 95;
         staticinvoke <Test1: void func1(int)>(a);
         staticinvoke <Test1: void func1(int)>(b);
-        tmp = <Test1: long gotoCount>;
+        tmp = <Test1: long gotoCount10>;
         tmp = tmp + 1L;
-        <Test1: long gotoCount> = tmp;
+        <Test1: long gotoCount10> = tmp;
         tmpRef = <java.lang.System: java.io.PrintStream out>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #0");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
+        tmpPrintLong = <Test1: long gotoCount10>;
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block 0:\n[preds: ] [succs: ]\nargs := @parameter0: java.lang.String[];\na = 0;\nb = 95;\nstaticinvoke <Test1: void func1(int)>(a);\nstaticinvoke <Test1: void func1(int)>(b);\ntmp = <Test1: long gotoCount10>;\ntmp = tmp + 1L;\n<Test1: long gotoCount10> = tmp;\ntmpRef = <java.lang.System: java.io.PrintStream out>;\nreturn;\n");
+        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong);
         return;
     }
 
     public static void func1(int)
     {
         int x, temp$0, temp$1, temp$2;
-        long tmp;
+        long tmp, tmpPrintLong;
         java.io.PrintStream tmpRef;
         java.lang.String tmpStr;
 
         x := @parameter0: int;
-        tmp = <Test1: long gotoCount>;
+        tmp = <Test1: long gotoCount20>;
         tmp = tmp + 1L;
-        <Test1: long gotoCount> = tmp;
-        tmpRef = <java.lang.System: java.io.PrintStream out>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #0");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
+        <Test1: long gotoCount20> = tmp;
         if x == 0 goto label0;
 
-        tmp = <Test1: long gotoCount>;
+        tmp = <Test1: long gotoCount21>;
         tmp = tmp + 1L;
-        <Test1: long gotoCount> = tmp;
-        tmpRef = <java.lang.System: java.io.PrintStream out>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #1");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
+        <Test1: long gotoCount21> = tmp;
         goto label1;
 
      label0:
         nop;
         temp$0 = 0;
-        tmp = <Test1: long gotoCount>;
+        tmp = <Test1: long gotoCount22>;
         tmp = tmp + 1L;
-        <Test1: long gotoCount> = tmp;
-        tmpRef = <java.lang.System: java.io.PrintStream out>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #2");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
+        <Test1: long gotoCount22> = tmp;
         x = temp$0;
 
      label1:
-        tmp = <Test1: long gotoCount>;
+        tmp = <Test1: long gotoCount23>;
         tmp = tmp + 1L;
-        <Test1: long gotoCount> = tmp;
-        tmpRef = <java.lang.System: java.io.PrintStream out>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #3");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
+        <Test1: long gotoCount23> = tmp;
         nop;
 
      label2:
         nop;
         temp$1 = x % 4;
-        tmp = <Test1: long gotoCount>;
+        tmp = <Test1: long gotoCount24>;
         tmp = tmp + 1L;
-        <Test1: long gotoCount> = tmp;
-        tmpRef = <java.lang.System: java.io.PrintStream out>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #4");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
+        <Test1: long gotoCount24> = tmp;
         if temp$1 != 0 goto label3;
 
-        tmp = <Test1: long gotoCount>;
+        tmp = <Test1: long gotoCount25>;
         tmp = tmp + 1L;
-        <Test1: long gotoCount> = tmp;
-        tmpRef = <java.lang.System: java.io.PrintStream out>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #5");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
+        <Test1: long gotoCount25> = tmp;
         goto label4;
 
      label3:
         nop;
         temp$2 = x / 4;
         x = temp$2;
-        tmp = <Test1: long gotoCount>;
+        tmp = <Test1: long gotoCount26>;
         tmp = tmp + 1L;
-        <Test1: long gotoCount> = tmp;
-        tmpRef = <java.lang.System: java.io.PrintStream out>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #6");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
+        <Test1: long gotoCount26> = tmp;
         goto label2;
 
      label4:
         nop;
-        tmp = <Test1: long gotoCount>;
+        tmp = <Test1: long gotoCount27>;
         tmp = tmp + 1L;
-        <Test1: long gotoCount> = tmp;
-        tmpRef = <java.lang.System: java.io.PrintStream out>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #7");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
+        <Test1: long gotoCount27> = tmp;
         return;
     }
 
     public void <init>()
     {
         Test1 this;
-        long tmp;
+        long tmp, tmpPrintLong;
         java.io.PrintStream tmpRef;
         java.lang.String tmpStr;
 
         this := @this: Test1;
         specialinvoke this.<java.lang.Object: void <init>()>();
-        tmp = <Test1: long gotoCount>;
+        tmp = <Test1: long gotoCount30>;
         tmp = tmp + 1L;
-        <Test1: long gotoCount> = tmp;
-        tmpRef = <java.lang.System: java.io.PrintStream out>;
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(java.lang.String)>("Block #0");
-        virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmp);
+        <Test1: long gotoCount30> = tmp;
         return;
     }
 }
