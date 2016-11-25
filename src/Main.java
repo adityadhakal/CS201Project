@@ -17,6 +17,7 @@ import soot.RefType;
 import soot.Scene;
 import soot.SootClass;
 import soot.SootField;
+import soot.SootFieldRef;
 import soot.SootMethod;
 import soot.Transform;
 import soot.Unit;
@@ -25,6 +26,8 @@ import soot.jimple.IntConstant;
 import soot.jimple.InvokeStmt;
 import soot.jimple.Jimple;
 import soot.jimple.LongConstant;
+import soot.jimple.ReturnStmt;
+import soot.jimple.Stmt;
 import soot.jimple.StringConstant;
 import soot.jimple.toolkits.annotation.logic.Loop;
 import soot.jimple.toolkits.annotation.logic.LoopFinder;
@@ -58,7 +61,7 @@ public class Main {
 	private static void staticAnalysis(){
 		//Static Analysis code
 		
-		configure("/home/hypothesis/workspace/CS201Project/Analysis"); //Change this path to your Analysis folder path in your project directory
+		configure("/home/aditya/Downloads/CS201Profiling/Analysis"); //Change this path to your Analysis folder path in your project directory
 		SootClass sootClass = Scene.v().loadClassAndSupport("Test1");
 	    sootClass.setApplicationClass();
 	    ArrayList<SootMethod> methods = (ArrayList<SootMethod>)sootClass.getMethods();
@@ -168,7 +171,7 @@ public class Main {
 		}
 	}
 	
-	private static PatchingChain<Unit> returnUnit; 
+	private static Stmt returnUnit; 
 	private static void dynamicAnalysis(){
 		PackManager.v().getPack("jtp").add(new Transform("jtp.myInstrumenter", new BodyTransformer() {
 			 
@@ -178,10 +181,26 @@ public class Main {
 			
 		@Override
 		protected void internalTransform(Body arg0, String arg1, Map arg2) {
-			//Dynamic Analysis (Instrumentation) code	
+			//Dynamic Analysis (Instrumentation) code
+			Local tmpRef = Jimple.v().newLocal("tmpRef", RefType.v("java.io.PrintStream"));
+			Local tmpPrintLong = Jimple.v().newLocal("tmpPrintLong", LongType.v());
+			arg0.getLocals().add(tmpRef);
+    		arg0.getLocals().add(tmpPrintLong);
 	      //Making blocks!!!
-			if(arg0.getMethod().getName().equals("main"))
-				returnUnit = arg0.getUnits();
+			if(arg0.getMethod().getName().equals("main")){
+				Iterator stmtIt = arg0.getUnits().snapshotIterator();
+				while (stmtIt.hasNext())
+				 	{
+					Stmt s = (Stmt) stmtIt.next();
+					if(s instanceof ReturnStmt){
+						returnUnit = s;
+					System.out.println(returnUnit);
+					}
+					}
+				
+	    		
+			}
+			
 			
 			ExceptionalBlockGraph blockGraph = new ExceptionalBlockGraph(arg0);
 	    	List<Block> blocks = blockGraph.getBlocks();
@@ -193,6 +212,9 @@ public class Main {
 	    	SootField[] gotoCounter = new SootField[blocks.size()];
 		    SootMethod toCall = null;
 		    SootMethod tolong = null;
+		    
+		    toCall = Scene.v().getMethod("<java.io.PrintStream: void println(java.lang.String)>");	
+    		tolong = Scene.v().getMethod("<java.io.PrintStream: void println(long)>");
 		        
 	     //   boolean addedLocals = false;
 	     //   Local tmpRef = null, tmpLong = null;
@@ -207,6 +229,11 @@ public class Main {
 	                for(int i =0; i<blocks.size(); i++){
 	                gotoCounter[i] = new SootField("_"+String.valueOf(blockGraph.getBody().getMethod().getNumber())+"_"+String.valueOf(i), LongType.v(),Modifier.STATIC);
 	                Scene.v().getMainClass().addField(gotoCounter[i]);
+	                
+	                arg0.getUnits().insertBefore(Jimple.v().newAssignStmt(tmpPrintLong, Jimple.v().newStaticFieldRef(gotoCounter[i].makeRef())),returnUnit);
+	              //Now loop through all the variables so we can print them
+		    		arg0.getUnits().insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
+		    				(tmpRef, tolong.makeRef(),tmpPrintLong)),returnUnit);
 	                }
 	                Scene.v().loadClassAndSupport("java.io.PrintStream");
 	                Scene.v().loadClassAndSupport("java.lang.System");
@@ -218,9 +245,8 @@ public class Main {
     		Local tmpLocal = Jimple.v().newLocal("tmp", LongType.v());
             arg0.getLocals().add(tmpLocal);
             
-            // Create a local to hold the PrintStream System.out
-    		Local tmpRef = Jimple.v().newLocal("tmpRef", RefType.v("java.io.PrintStream"));
-    		arg0.getLocals().add(tmpRef);
+        
+    		
     		
     		//Create another local to hold String.valueOf
     		Local tmpStr = Jimple.v().newLocal("tmpStr", RefType.v("java.lang.String"));
@@ -255,39 +281,37 @@ public class Main {
 	    		//System.out.println("."+blockGraph.getBody().getMethod().getName()+".");
 	    		
 
-	    		//This assigns the print object
-	    		AssignStmt whatever = Jimple.v().newAssignStmt(tmpRef,Jimple.v().newStaticFieldRef(Scene.v().getField
-	    				("<java.lang.System: java.io.PrintStream out>").makeRef()));
 	    		
-	    		//We need to print everything on Main Statement
-	    		//Now the printing Statement In the end of the method
-	    		//Adding print object
-	    		blocks.get(j).insertBefore(whatever, bTail);
 	    	}
 		    		
-
+//	    	//This assigns the print object
+//    		AssignStmt whatever = Jimple.v().newAssignStmt(tmpRef,Jimple.v().newStaticFieldRef(Scene.v().getField
+//    				("<java.lang.System: java.io.PrintStream out>").makeRef()));
+//    		
+//    		//We need to print everything on Main Statement
+//    		//Now the printing Statement In the end of the method
+//    		//Adding print object
+//    		blocks.get(j).insertBefore(whatever, bTail);
 		    		//This actually prints "tmpLocal" --- We need to print gotoCounter...
-		    		toCall = Scene.v().getMethod("<java.io.PrintStream: void println(java.lang.String)>");	
-		    		tolong = Scene.v().getMethod("<java.io.PrintStream: void println(long)>");
 		    		
-		    		
+		    			
 		    	
-		    		Chain units = arg0.getUnits();
+		    		//Chain units = arg0.getUnits();
 		    		
-		    		for(int k = 0; k<blocks.size();k++){
+		    		//for(int k = 0; k<blocks.size();k++){
 		    			
 		    			// First get the tmpRef added. Let's add a lot of them
 		    			//Putting a new local variable tmpPrintLong to Print everything at the end
-		        		Local tmpPrintLong = Jimple.v().newLocal("tmpPrintLong"+k, LongType.v());
-		        		arg0.getLocals().add(tmpPrintLong);
+		        		
 		    			
 //		    		units.add(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr(base, method)))	
-		    			
-		    		units.add(Jimple.v().newAssignStmt(tmpPrintLong, 
-		                       Jimple.v().newStaticFieldRef(gotoCounter[k].makeRef() )));
-//		    		//Now loop through all the variables so we can print them
-		    		units.add(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
-		    				(tmpRef, tolong.makeRef(),tmpPrintLong)));
+		        		
+		        	//returnUnit.addLast( Jimple.v().newAssignStmt(tmpRef,Jimple.v().newStaticFieldRef((SootFieldRef) Scene.v().getField("<java.lang.System: java.io.PrintStream out>"))));
+//		    		returnUnit.addLast(Jimple.v().newAssignStmt(tmpPrintLong, 
+//		                       Jimple.v().newStaticFieldRef(gotoCounter[k].makeRef() )));
+////		    		//Now loop through all the variables so we can print them
+//		    		returnUnit.addLast(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
+//		    				(tmpRef, tolong.makeRef(),tmpPrintLong)));
 //		    	
 //		    		InvokeStmt print_method_name = Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
 //		    				(tmpRef, toCall.makeRef(),StringConstant.v(blocks.get(j).toString())));
@@ -301,7 +325,7 @@ public class Main {
 		    		//blocks.get(j).insertBefore(print_long, bTail);
 //		    		
 		    		
-		    		}
+		    		
 		    		
 		    	
 	    	
