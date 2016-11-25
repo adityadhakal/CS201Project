@@ -24,6 +24,9 @@ public class Test1 extends java.lang.Object
         b = 95;
         staticinvoke <Test1: void func1(int)>(a);
         staticinvoke <Test1: void func1(int)>(b);
+        tmp = <Test1: long _1_0>;
+        tmp = tmp + 1L;
+        <Test1: long _1_0> = tmp;
         tmpRef = <java.lang.System: java.io.PrintStream out>;
         tmpPrintLong = <Test1: long _1_0>;
         virtualinvoke tmpRef.<java.io.PrintStream: void println(long)>(tmpPrintLong);

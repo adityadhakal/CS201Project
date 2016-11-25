@@ -220,8 +220,17 @@ public class Main {
 		    toCall = Scene.v().getMethod("<java.io.PrintStream: void println(java.lang.String)>");	
     		tolong = Scene.v().getMethod("<java.io.PrintStream: void println(long)>");
 		        
-	     //   boolean addedLocals = false;
-	     //   Local tmpRef = null, tmpLong = null;
+    		  //Putting a new variable tmpLocal
+    		Local tmpLocal = Jimple.v().newLocal("tmp", LongType.v());
+            arg0.getLocals().add(tmpLocal);
+            
+        
+    		
+    		
+    		//Create another local to hold String.valueOf
+    		Local tmpStr = Jimple.v().newLocal("tmpStr", RefType.v("java.lang.String"));
+    		arg0.getLocals().add(tmpStr);
+    		
 	     // Add code at the end of the main method to print out the 
 	        // gotoCounter (this only works in simple cases, because you may have multiple returns or System.exit()'s )
 	        synchronized(this)
@@ -234,12 +243,24 @@ public class Main {
 	                gotoCounter[i] = new SootField("_"+String.valueOf(blockGraph.getBody().getMethod().getNumber())+"_"+String.valueOf(i), LongType.v(),Modifier.STATIC);
 	                Scene.v().getMainClass().addField(gotoCounter[i]);
 	                
+	                if(arg0.getMethod().getName().equals("main")&& i == 0){
+	                	//tmpLocal = _1_0
+	                	Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt(tmpLocal, 
+	                        Jimple.v().newStaticFieldRef(gotoCounter[0].makeRef())),returnUnit);
+	                	//tmpLocal = tmpLocal+1
+	                	Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt(tmpLocal,
+	 	    				Jimple.v().newAddExpr(tmpLocal, LongConstant.v(1L))),returnUnit);
+	                	//_1_0 = tmpLocal
+	                	Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt(Jimple.v().newStaticFieldRef
+	 	    				(gotoCounter[0].makeRef()),tmpLocal),returnUnit);
+	                }
 	                //This assigns tempref to print
 	                Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt
 	                		(tmpRef, Jimple.v().newStaticFieldRef(Scene.v().getField("<java.lang.System: java.io.PrintStream out>").makeRef())),returnUnit);
 	                
 	                //This assigns long variables to static longs
-	                Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt(tmpPrintLong, Jimple.v().newStaticFieldRef(gotoCounter[i].makeRef())),returnUnit);
+	                Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt
+	                		(tmpPrintLong, Jimple.v().newStaticFieldRef(gotoCounter[i].makeRef())),returnUnit);
 	              //Now loop through all the variables so we can print them
 		    		Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
 		    				(tmpRef, tolong.makeRef(),tmpPrintLong)),returnUnit);
@@ -250,17 +271,7 @@ public class Main {
 	                addedFieldToMainClassAndLoadedPrintStream = true;    
 	        }
 	         
-	        //Putting a new variable tmpLocal
-    		Local tmpLocal = Jimple.v().newLocal("tmp", LongType.v());
-            arg0.getLocals().add(tmpLocal);
-            
-        
-    		
-    		
-    		//Create another local to hold String.valueOf
-    		Local tmpStr = Jimple.v().newLocal("tmpStr", RefType.v("java.lang.String"));
-    		arg0.getLocals().add(tmpStr);
-    		
+	      
     		
     		
 	    	//Iterating through blocks
