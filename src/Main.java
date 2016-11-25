@@ -184,8 +184,10 @@ public class Main {
 		protected void internalTransform(Body arg0, String arg1, Map arg2) {
 			//Dynamic Analysis (Instrumentation) code
 			Local tmpRef = Jimple.v().newLocal("tmpRef", RefType.v("java.io.PrintStream"));
-			Local tmpPrintLong = Jimple.v().newLocal("tmpPrintLong", LongType.v());
 			Scene.v().getMainMethod().getActiveBody().getLocals().add(tmpRef);
+			
+			Local tmpPrintLong = Jimple.v().newLocal("tmpPrintLong", LongType.v());
+			
     		Scene.v().getMainMethod().getActiveBody().getLocals().add(tmpPrintLong);
 	      //Making blocks!!!
 			if(arg0.getMethod().getName().equals("main")){
@@ -232,6 +234,11 @@ public class Main {
 	                gotoCounter[i] = new SootField("_"+String.valueOf(blockGraph.getBody().getMethod().getNumber())+"_"+String.valueOf(i), LongType.v(),Modifier.STATIC);
 	                Scene.v().getMainClass().addField(gotoCounter[i]);
 	                
+	                //This assigns tempref to print
+	                Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt
+	                		(tmpRef, Jimple.v().newStaticFieldRef(Scene.v().getField("<java.lang.System: java.io.PrintStream out>").makeRef())),returnUnit);
+	                
+	                //This assigns long variables to static longs
 	                Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt(tmpPrintLong, Jimple.v().newStaticFieldRef(gotoCounter[i].makeRef())),returnUnit);
 	              //Now loop through all the variables so we can print them
 		    		Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
