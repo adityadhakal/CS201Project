@@ -58,7 +58,7 @@ public class Main {
 	private static void staticAnalysis(){
 		//Static Analysis code
 		
-		configure("/home/aditya/Downloads/CS201Profiling/Analysis"); //Change this path to your Analysis folder path in your project directory
+		configure("/home/hypothesis/workspace/CS201Project/Analysis"); //Change this path to your Analysis folder path in your project directory
 		SootClass sootClass = Scene.v().loadClassAndSupport("Test1");
 	    sootClass.setApplicationClass();
 	    ArrayList<SootMethod> methods = (ArrayList<SootMethod>)sootClass.getMethods();
@@ -168,20 +168,25 @@ public class Main {
 		}
 	}
 	
-	
+	private static PatchingChain<Unit> returnUnit; 
 	private static void dynamicAnalysis(){
 		PackManager.v().getPack("jtp").add(new Transform("jtp.myInstrumenter", new BodyTransformer() {
-
+			 
 			boolean addedFieldToMainClassAndLoadedPrintStream = false;
 			boolean flag = true;
 			private SootClass javaIoPrintStream;
+			
 		@Override
 		protected void internalTransform(Body arg0, String arg1, Map arg2) {
 			//Dynamic Analysis (Instrumentation) code	
 	      //Making blocks!!!
+			if(arg0.getMethod().getName().equals("main"))
+				returnUnit = arg0.getUnits();
+			
 			ExceptionalBlockGraph blockGraph = new ExceptionalBlockGraph(arg0);
 	    	List<Block> blocks = blockGraph.getBlocks();
 	    	System.out.println("Method: "+blockGraph.getBody().getMethod().getName()+" :");
+	    	System.out.println("---V---");
 	    	
 	    	//System.out.println("Block Size = "+blocks.size());
 	    	//Making fields for counting and printing
@@ -200,7 +205,7 @@ public class Main {
 	                throw new RuntimeException("couldn't find main() in mainClass");
 
 	                for(int i =0; i<blocks.size(); i++){
-	                gotoCounter[i] = new SootField("gotoCount"+String.valueOf(blockGraph.getBody().getMethod().getNumber())+String.valueOf(i), LongType.v(),Modifier.STATIC);
+	                gotoCounter[i] = new SootField("_"+String.valueOf(blockGraph.getBody().getMethod().getNumber())+"_"+String.valueOf(i), LongType.v(),Modifier.STATIC);
 	                Scene.v().getMainClass().addField(gotoCounter[i]);
 	                }
 	                Scene.v().loadClassAndSupport("java.io.PrintStream");
