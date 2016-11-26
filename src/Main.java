@@ -64,7 +64,7 @@ public class Main {
 	private static void staticAnalysis(){
 		//Static Analysis code
 		
-		configure("/home/hypothesis/workspace/CS201Project/Analysis"); //Change this path to your Analysis folder path in your project directory
+		configure("/home/aditya/Downloads/CS201Profiling/Analysis"); //Change this path to your Analysis folder path in your project directory
 		SootClass sootClass = Scene.v().loadClassAndSupport("Test1");
 	    sootClass.setApplicationClass();
 	    ArrayList<SootMethod> methods = (ArrayList<SootMethod>)sootClass.getMethods();
@@ -230,13 +230,7 @@ public class Main {
     		  //Putting a new variable tmpLocal
     		Local tmpLocal = Jimple.v().newLocal("tmp", LongType.v());
             arg0.getLocals().add(tmpLocal);
-            
-<<<<<<< HEAD
-        
-    		
-    		
-=======
->>>>>>> af0e23ba11af6b5e21475c72658072209c4b6935
+
     		//Create another local to hold String.valueOf
     		Local tmpStr = Jimple.v().newLocal("tmpStr", RefType.v("java.lang.String"));
     		arg0.getLocals().add(tmpStr);
@@ -254,8 +248,7 @@ public class Main {
 	                	//gotoCounter is shootfield for the static variable
 	                gotoCounter[i] = new SootField("_"+String.valueOf(blockGraph.getBody().getMethod().getNumber())+"_"+String.valueOf(i), LongType.v(),Modifier.STATIC);
 	                Scene.v().getMainClass().addField(gotoCounter[i]);
-	                
-<<<<<<< HEAD
+
 	                //aditya
 	                InvokeExpr increaseExp = Jimple.v().newStaticInvokeExpr(increase.makeRef(), StringConstant.v(arg0.getMethod().getSignature()), IntConstant.v(i));
 	                Stmt increaseStmt = Jimple.v().newInvokeStmt(increaseExp);
@@ -274,9 +267,7 @@ public class Main {
 	 	    				(gotoCounter[0].makeRef()),tmpLocal),returnUnit);
 	                }
 	                //This assigns tempref to print
-=======
-	              //This assigns temRef to print
->>>>>>> af0e23ba11af6b5e21475c72658072209c4b6935
+
 	                Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt
 	                		(tmpRef, Jimple.v().newStaticFieldRef(Scene.v().getField("<java.lang.System: java.io.PrintStream out>").makeRef())),returnUnit);
 	              //Print the Name of the method on Start of each block
@@ -303,16 +294,15 @@ public class Main {
 	                //This assigns long variables to static longs
 	                Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt
 	                		(tmpPrintLong, Jimple.v().newStaticFieldRef(gotoCounter[i].makeRef())),returnUnit);
-<<<<<<< HEAD
+
 	              //Now loop through all the variables so we can print them
-=======
+
 	              
 	               //This prints the block number
 	                Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
 		    				(tmpRef, toPrint.makeRef(),StringConstant.v("b"+i+":"))),returnUnit);
 	                
 	                //This part prints the Long Values:
->>>>>>> af0e23ba11af6b5e21475c72658072209c4b6935
 		    		Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
 		    				(tmpRef, tolong.makeRef(),tmpPrintLong)),returnUnit);
 	                }
@@ -322,18 +312,17 @@ public class Main {
 	                javaIoPrintStream = Scene.v().getSootClass("java.io.PrintStream");
 	                addedFieldToMainClassAndLoadedPrintStream = true;    
 	        }
-	         
-<<<<<<< HEAD
-	      
-    		
-=======
->>>>>>> af0e23ba11af6b5e21475c72658072209c4b6935
     		
 	    	//Iterating through blocks
 	    	//for(Block b : blocks)
 	    	for(int j = 0; j<blocks.size();j++)	
 	    	{
 	    		Unit bTail = blocks.get(j).getTail();// This gives us tail unit.
+	    		Unit bhead = blocks.get(j).getHead();//this gives us head unit
+	    		
+	    		 InvokeExpr increaseExp = Jimple.v().newStaticInvokeExpr(increase.makeRef(), 
+	    				 StringConstant.v(arg0.getMethod().getSignature()), IntConstant.v(j));
+	                Stmt increaseStmt = Jimple.v().newInvokeStmt(increaseExp);
 	    		
 	    		AssignStmt toAdd1 = Jimple.v().newAssignStmt(tmpLocal, 
                        Jimple.v().newStaticFieldRef(gotoCounter[j].makeRef() ));
@@ -342,6 +331,8 @@ public class Main {
 	    		AssignStmt toAdd3 = Jimple.v().newAssignStmt(Jimple.v().newStaticFieldRef
 	    				(gotoCounter[j].makeRef()),tmpLocal);
 	    		
+	    		//inserting increase statement in each block's head
+	    		blocks.get(j).insertAfter(increaseStmt, bhead);
 	    	
 	    	
 	    		// insert "tmpLocal = gotoCounter;"
