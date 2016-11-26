@@ -21,8 +21,10 @@ import soot.SootFieldRef;
 import soot.SootMethod;
 import soot.Transform;
 import soot.Unit;
+import soot.JastAddJ.Signatures;
 import soot.jimple.AssignStmt;
 import soot.jimple.IntConstant;
+import soot.jimple.InvokeExpr;
 import soot.jimple.InvokeStmt;
 import soot.jimple.Jimple;
 import soot.jimple.LongConstant;
@@ -54,7 +56,7 @@ public class Main {
 		
 		//Dynamic Analysis (Instrumentation) 
 		dynamicAnalysis();
- 
+		Scene.v().addBasicClass(EdgeProfiling.class.getName());
 		soot.Main.main(args);
 
 	}
@@ -62,7 +64,7 @@ public class Main {
 	private static void staticAnalysis(){
 		//Static Analysis code
 		
-		configure("/home/aditya/Downloads/CS201Profiling/Analysis"); //Change this path to your Analysis folder path in your project directory
+		configure("/home/hypothesis/workspace/CS201Project/Analysis"); //Change this path to your Analysis folder path in your project directory
 		SootClass sootClass = Scene.v().loadClassAndSupport("Test1");
 	    sootClass.setApplicationClass();
 	    ArrayList<SootMethod> methods = (ArrayList<SootMethod>)sootClass.getMethods();
@@ -179,6 +181,9 @@ public class Main {
 			boolean addedFieldToMainClassAndLoadedPrintStream = false;
 			boolean flag = true;
 			private SootClass javaIoPrintStream;
+			private SootClass edgeProfiling = Scene.v().loadClassAndSupport("EdgeProfiling");
+			private SootMethod increase = edgeProfiling.getMethodByName("increase");
+			
 			
 		@Override
 		protected void internalTransform(Body arg0, String arg1, Map arg2) {
@@ -191,6 +196,8 @@ public class Main {
     		Scene.v().getMainMethod().getActiveBody().getLocals().add(tmpPrintLong);
 	      //Making blocks!!!
 			if(arg0.getMethod().getName().equals("main")){
+				SootField currentBlock = new SootField("currentBlock", LongType.v());
+				SootField prev = new SootField("prevBlock", LongType.v());
 				Iterator<Unit> stmtIt = arg0.getUnits().iterator();
 				System.out.println("Does it execute here?");
 				while (stmtIt.hasNext())
@@ -220,8 +227,17 @@ public class Main {
 		    toCall = Scene.v().getMethod("<java.io.PrintStream: void println(java.lang.String)>");	
     		tolong = Scene.v().getMethod("<java.io.PrintStream: void println(long)>");
 		        
-	     //   boolean addedLocals = false;
-	     //   Local tmpRef = null, tmpLong = null;
+    		  //Putting a new variable tmpLocal
+    		Local tmpLocal = Jimple.v().newLocal("tmp", LongType.v());
+            arg0.getLocals().add(tmpLocal);
+            
+        
+    		
+    		
+    		//Create another local to hold String.valueOf
+    		Local tmpStr = Jimple.v().newLocal("tmpStr", RefType.v("java.lang.String"));
+    		arg0.getLocals().add(tmpStr);
+    		
 	     // Add code at the end of the main method to print out the 
 	        // gotoCounter (this only works in simple cases, because you may have multiple returns or System.exit()'s )
 	        synchronized(this)
@@ -234,33 +250,42 @@ public class Main {
 	                gotoCounter[i] = new SootField("_"+String.valueOf(blockGraph.getBody().getMethod().getNumber())+"_"+String.valueOf(i), LongType.v(),Modifier.STATIC);
 	                Scene.v().getMainClass().addField(gotoCounter[i]);
 	                
+	                //aditya
+	                InvokeExpr increaseExp = Jimple.v().newStaticInvokeExpr(increase.makeRef(), StringConstant.v(arg0.getMethod().getSignature()), IntConstant.v(i));
+	                Stmt increaseStmt = Jimple.v().newInvokeStmt(increaseExp);
+	                //aditya
+	                
+	                if(arg0.getMethod().getName().equals("main")&& i == 0){
+	                	
+	                	//tmpLocal = _1_0
+	                	Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt(tmpLocal, 
+	                        Jimple.v().newStaticFieldRef(gotoCounter[0].makeRef())),returnUnit);
+	                	//tmpLocal = tmpLocal+1
+	                	Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt(tmpLocal,
+	 	    				Jimple.v().newAddExpr(tmpLocal, LongConstant.v(1L))),returnUnit);
+	                	//_1_0 = tmpLocal
+	                	Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt(Jimple.v().newStaticFieldRef
+	 	    				(gotoCounter[0].makeRef()),tmpLocal),returnUnit);
+	                }
 	                //This assigns tempref to print
 	                Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt
 	                		(tmpRef, Jimple.v().newStaticFieldRef(Scene.v().getField("<java.lang.System: java.io.PrintStream out>").makeRef())),returnUnit);
 	                
 	                //This assigns long variables to static longs
-	                Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt(tmpPrintLong, Jimple.v().newStaticFieldRef(gotoCounter[i].makeRef())),returnUnit);
+	                Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newAssignStmt
+	                		(tmpPrintLong, Jimple.v().newStaticFieldRef(gotoCounter[i].makeRef())),returnUnit);
 	              //Now loop through all the variables so we can print them
 		    		Scene.v().getMainMethod().getActiveBody().getUnits().insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr
 		    				(tmpRef, tolong.makeRef(),tmpPrintLong)),returnUnit);
 	                }
 	                Scene.v().loadClassAndSupport("java.io.PrintStream");
 	                Scene.v().loadClassAndSupport("java.lang.System");
+	                Scene.v().loadClassAndSupport("EdgeProfiling");
 	                javaIoPrintStream = Scene.v().getSootClass("java.io.PrintStream");
 	                addedFieldToMainClassAndLoadedPrintStream = true;    
 	        }
 	         
-	        //Putting a new variable tmpLocal
-    		Local tmpLocal = Jimple.v().newLocal("tmp", LongType.v());
-            arg0.getLocals().add(tmpLocal);
-            
-        
-    		
-    		
-    		//Create another local to hold String.valueOf
-    		Local tmpStr = Jimple.v().newLocal("tmpStr", RefType.v("java.lang.String"));
-    		arg0.getLocals().add(tmpStr);
-    		
+	      
     		
     		
 	    	//Iterating through blocks
